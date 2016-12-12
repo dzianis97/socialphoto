@@ -1,0 +1,94 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<add namespace="System.Web.Optimization" />
+@model social.Models.UploadPhotoModel
+
+@{
+    ViewBag.Title = "Create";
+}
+<br><br><br>
+<div id="new_message_place"></div>
+<center>
+@using (Html.BeginForm("Index", "Create", FormMethod.Post, new { enctype = "multipart/form-data", @class= "w3-container w3-card-4", style="width:100%; max-width:600px;" }))
+{
+    @Html.ValidationSummary(true)
+    
+    
+   
+        <h2>Upload Photo</h2>
+
+        <div class="w3-label w3-text-blue">Title</div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Title, new { id = "Title", name = "Title", @class="w3-input w3-border" })
+         
+        </div>
+
+        <div class="w3-label w3-text-blue">Description</div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Content, new { id = "Content", name = "Content", @class = "w3-input w3-border" })
+           
+        </div>
+        
+        <div class="w3-label w3-text-blue">Image file</div>
+        <div class="editor-field">
+            <input type="file"  name="Image" id="Image" />
+        </div>
+        <div class="w3-label w3-text-blue">Make photo private?</div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.isPrivate, new { id = "isPrivate", name = "isPrivate", @class = "w3-check" })
+
+            </div>
+        <p>
+            <input type="submit" value="Upload" class="w3-btn w3-theme-d1 w3-margin-bottom" id="messageSubmit" />
+        </p>
+    
+}
+    </center>
+
+
+@section scripts {
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.1.min.js")
+    @Scripts.Render("~/signalr/hubs")
+<script>
+    $(function () {
+        var chat = $.connection.photoHub;
+        chat.client.addMessage = function (message) {
+            $('#new_message_place').replaceWith('<div id="new_message_place"></div>' +
+                '<div class="media"><a class="media-left" href="Index/' +
+                htmlEncode(message.SenderId) +
+                '"><img src="@Url.Content("~/Images/")/' +
+                htmlEncode(message.SenderPhoto) +
+                '" class="media-object img-circle" style="width:50px"></a><div class="media-body"><h4 class="media-heading">' +
+                htmlEncode(message.SenderName) +
+                ' <small><i>Posted ' +
+                 htmlEncode(message.time) +
+                 '</i></small></h4><p>' +
+                htmlEncode(message.content) +
+                '</p></div></div>');
+        };
+        $.connection.hub.start().done(function () {
+            $('#messageSubmit').click(function () {
+                var date = new Date();
+                var time = date.getHours() + ":" + date.getMinutes();
+                var msg = {
+                    'SenderId': "@User.Identity.GetUserId()",
+                    'Title': $('#Title').val(),
+                    'Content': $('#Content').val(),
+                    'Image': "@User.Identity.GetUserId()"+$('#Image').val().split('\\').pop(),
+                    'time': time,
+                };
+                chat.server.send(msg);
+            });
+        });
+    });
+    function htmlEncode(value) {
+        var encodedValue = $('<div />').text(value).html();
+        return encodedValue;
+    }
+</script>
+}

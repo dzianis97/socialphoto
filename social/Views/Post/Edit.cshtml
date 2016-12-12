@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "Edit Post";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model social.Models.Photo
+    <br><br>
+<center>
+<h2>Edit post</h2>
+<div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" align="left">
+    <br>
+    <center>
+    <img style='width:100%; max-width:550px;' src="@Url.Content("~/PostedImages/")@Model.Image" /></center>
+    @using (Html.BeginForm("Edit", "Post", FormMethod.Post))
+    {
+        
+            @Html.HiddenFor(m => m.Id)
+            <p>
+                @Html.LabelFor(m => m.Title, "Title of image")
+                <br />
+                @Html.EditorFor(m => m.Title, new { @class = "w3-input w3-border" })
+            </p>
+            <p>
+                @Html.LabelFor(m => m.Content, "Description for image")
+                <br />
+                @Html.EditorFor(m => m.Content, new { @class = "w3-input w3-border" })
+
+            </p>
+            <p>
+                
+                
+                @Html.EditorFor(m => m.isPrivate, new { @class = "w3-check" })
+                @Html.LabelFor(m => m.isPrivate, "Make image private?")
+
+            </p>
+            <div>
+                <h5>Users who have access to this private photo (click to delete):</h5>
+                @foreach (var usr in ViewBag.users)
+                {
+                    <a class="w3-btn w3-white w3-border w3-border-red " onclick="deluser('@usr.UserId', '@usr.Email', '@usr.UserName');" id="del_@usr.UserId">
+                        @usr.UserName @usr.Email
+                    </a><br>
+                }
+            </div>
+            <div id="allusers">
+                <h5>Add new users:</h5>
+                @foreach (var usr in ViewBag.allusers)
+                {
+                    <a class="w3-btn w3-white w3-border w3-border-green " onclick="adduser('@usr.UserId', '@usr.Email', '@usr.UserName');" id="@usr.UserId">@usr.UserName @usr.Email</a><br>
+                }
+            </div>
+            <h5>This users will be add:</h5>
+            <div id="userstoadd">
+
+            </div>
+            <h5>This users will be deleted:</h5>
+            <div id="userstodel">
+
+            </div>
+            @Html.HiddenFor(m => m.Image)
+            @Html.HiddenFor(m => m.PublishedTime)
+            @Html.HiddenFor(m => m.SenderId)
+            @Html.HiddenFor(m => m.LikesCount)
+
+            <input id="AddUsersId" name="AddUsersId" type="hidden" value="" />
+            <input id="DeleteUsersId" name="DeleteUsersId" type="hidden" value="" />
+            <p><input class="w3-btn w3-white w3-border w3-border-blue " type="submit" value="Отправить" /></p>
+        
+    }
+    </div>
+    </center>
+    <script>
+
+        function adduser(usrid, email, name) {
+            document.getElementById(usrid).style.display = "none";
+            document.getElementById('userstoadd').innerHTML += email + name + "<br>";
+            document.getElementById('AddUsersId').value += usrid + ";";
+        }
+        function deluser(usrid, email, name) {
+            document.getElementById('del_' + usrid).style.display = "none";
+            document.getElementById('userstodel').innerHTML += email + name + "<br>";
+            document.getElementById('DeleteUsersId').value += usrid + ";";
+        }
+    </script>

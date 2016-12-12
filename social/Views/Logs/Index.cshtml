@@ -1,0 +1,76 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<social.Models.Post>
+
+@{
+    ViewBag.Title = "Index";
+}
+<br><br><br>
+
+<center>
+    <h1>Logs</h1>
+    <table style="width:100%;" border="1">
+        <tbody>
+            <tr>
+                <td>ID</td>
+                <td>PhotoId</td>
+                <td>UserId</td>
+                <td>ActionName</td>
+                <td>DateTime</td>
+                <td>Content</td>
+            </tr>
+            @foreach (var item in ViewBag.postlogs)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.PhotoId</td>
+                    <td>@item.UserId</td>
+                    <td>@item.ActionName</td>
+                    <td>@item.DateTime</td>
+                    <td>@item.Content</td>
+                </tr>  
+            }
+            
+        </tbody>
+    </table>
+
+    <h2>Comments</h2>
+    <table style="width:100%;" border="1">
+        <tbody>
+            <tr>
+                <td>ID</td>
+                <td>CommentId</td>
+                <td>UserId</td>
+                <td>ActionName</td>
+                <td>DateTime</td>
+                <td>Content</td>
+            </tr>
+            @foreach (var item in ViewBag.commentlogs)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.CommentId</td>
+                    <td>@item.UserId</td>
+                    <td>@item.ActionName</td>
+                    <td>@item.DateTime</td>
+                    <td>@item.Content</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+
+
+
+
+
+    @section scripts {
+        @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+        @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+        @Scripts.Render("~/Scripts/jquery.signalR-2.2.1.min.js")
+        @Scripts.Render("~/signalr/hubs")
+
+    }
+</center>

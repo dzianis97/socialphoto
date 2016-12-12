@@ -1,0 +1,29 @@
+﻿@model IEnumerable<social.Models.User>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Age</th>
+            <th>Gender</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("Index", "Account", new {id = user.UserId }, null)">
+                        <img src="@Url.Content("~/Images/")/@user.Photo" class="img-circle" width="50" height="50">
+                    </a>
+                </td>
+                <td>@user.UserName</td>
+                <td>@user.SurName</td>
+                <td>@((System.DateTime.Now - user.BirthDay).Days / 365)</td>
+                <td>@user.Gender</td>
+            </tr>
+        }
+    </tbody>
+</table>

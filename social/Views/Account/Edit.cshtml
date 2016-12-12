@@ -1,0 +1,75 @@
+﻿@model social.Models.EditUserViewModel
+
+@{
+    Layout = "~/Views/_AuthLayout.cshtml";
+    ViewBag.Title = "Edit User";
+}
+
+    
+    <div style="max-width:600px;" align="left">
+        <div class="w3-container w3-teal" >
+            <h2>Edit User Form</h2>
+        </div>
+        @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { enctype = "multipart/form-data", role = "form", Class = "w3-container w3-card-4 w3-padding-12" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div>
+                @Html.ValidationSummary(false)
+
+
+
+                <div class="form-group">
+                    <label class="w3-text-grey">Surname</label>
+                    @Html.TextBoxFor(model => model.SurName, new { @class = "w3-input w3-border", placeholder = "surname" })
+                </div>
+
+                <div class="form-group">
+                    <label class="w3-text-grey">Email</label>
+                    @Html.TextBoxFor(model => model.Email, new { @class = "w3-input w3-border", placeholder = "email" })
+                </div>
+
+                <div class="form-group">
+                    <label class="w3-text-grey">Birth Date</label>
+                    
+                    @Html.TextBoxFor(model => model.BirthDay, "{0:yyyy-MM-dd}", new { @class = "w3-input w3-border", type = "date" })
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="w3-btn w3-white w3-border w3-border-blue" style="width:100%;">
+                        <img src="@Url.Content("~/Images/")/@Model.PhotoURL" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px; height:60px;"/>
+                        Select New Avatar Photo...<input type="file" class="form-control" name="Photo" id="Photo" style="display: none;" />
+                    </label>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="w3-text-grey">Gender</label>
+                    <div class="w3-radio">@Html.RadioButtonFor(m => m.Gender, "Man", new { @checked = "" })Man</div>
+                    <div class="w3-radio">@Html.RadioButtonFor(m => m.Gender, "Woman")Woman</div>
+                </div>
+
+
+                <br>
+                <div class="form-group">
+                    <button type="submit" class="w3-btn w3-padding w3-teal">
+                        Save
+                    </button>
+
+                </div>
+            </div>
+        }
+
+
+
+    </div>
+
+<br>
+<div style="max-width:600px;" align="left">
+    <div class="w3-container w3-teal">
+        <h2>Change your password to improve your security</h2>
+    </div>
+    <div class="w3-container w3-card-4 w3-padding-12" align="center">
+        <a href="/Account/Manage/" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-edit"></i> &nbsp;Change password</a>
+
+    </div>
+</div>

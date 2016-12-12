@@ -1,0 +1,57 @@
+﻿
+@{
+    Layout = "~/Views/_AuthLayout.cshtml";
+    ViewBag.Title = "MobileView";
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <button class="btn btn-success" id="getUsers">All Users</button>
+        <div id="tableBlock"></div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#getUsers").click(function (event) {
+            event.preventDefault();
+            GetAllUsers();
+        });
+    });
+
+    function GetAllUsers() {
+        $("#getUsers").css('display', 'none');
+        $.ajax({
+            url: '/api/values',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                WriteResponse(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+
+    function WriteResponse(users) {
+        var strResult = "<table class='table table-striped'><thead><tr><th>Photo</th><th>Name</th><th>Surname</th><th>Gender</th></tr></thead><tbody>";
+        $.each(users, function (index, user) {
+            strResult += '<tr><td><a href="Index/' + user.Id +
+            '"><img src="' + @Url.Content("~/Images/")+ '/'+
+            user.Photo + '"class="img-circle" width="50" height="50"></a></td><td>'+
+            user.UserName + '</td><td>'+ user.SurName  + '</td><td>' + user.Gender + '</td></tr>';
+        });
+        strResult += "</tbody></table>";
+        $("#tableBlock").html(strResult);
+
+    }
+
+    function htmlEncode(value) {
+        var encodedValue = $('<div />').text(value).html();
+        return encodedValue;
+    }
+    </script>
+}

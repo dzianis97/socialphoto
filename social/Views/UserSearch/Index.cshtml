@@ -1,0 +1,93 @@
+﻿@model IEnumerable<social.Models.User>
+
+@{
+    ViewBag.Title = "UserSearch";
+}
+<br><br><br>
+
+<center>
+
+    <h1>User Search</h1>
+    <div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" align="left">
+        <br>
+        <aside>
+            @using (Html.BeginForm("Index", "UserSearch", FormMethod.Post, new { role = "form", @class = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div>
+                    @Html.ValidationSummary()
+                    
+
+                    <div class="form-group">
+                        <label class="w3-label">Username</label>
+                        <input class="w3-input w3-border w3-round" name="UserName" id="UsrName" >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="w3-label">Surname</label>
+                        <input class="w3-input w3-border w3-round" name="SurName" id="SurName" >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="w3-label">BirthDate min</label>
+                        <input type="date" class="w3-input w3-border w3-round" name="AgeMin" id="AgeMin" >
+                    </div>
+
+                    <div class="form-group">
+                        <label class="w3-label">BirthDate max</label>
+                        <input type="date" class="w3-input w3-border w3-round" name="AgeMax" id="AgeMax" >
+                    </div>
+
+                    <div class="form-group">
+                        <div class="radio-inline"><input class="w3-radio" type="radio" name="Gender" id="Gender" value="Man">Man  </div>
+                        <div class="radio-inline"><input class="w3-radio" type="radio" name="Gender" id="Gender" value="Woman">Woman</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                               <center> <button type="submit" class="w3-btn w3-theme-d1 w3-margin-bottom">
+                                    Search
+                                </button></center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </aside>
+        <br>
+    </div>
+
+
+
+
+
+
+
+    @if (Model != null)
+    {
+        if (Model.Count() == 0)
+        {
+           
+       
+                <h1>Nothing found :(</h1>
+
+
+        }
+        else
+        {
+            <h1>Results</h1>
+            <div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" >
+                <br>
+                
+                @Html.Partial("~/Views/Partial/UserList.cshtml")
+                <br>
+                </div>
+                }
+                }
+
+
+
+
+</center>
+

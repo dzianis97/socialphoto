@@ -1,0 +1,125 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "My Profile";
+}
+@model IEnumerable<social.Models.Post>
+
+
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+    <!-- The Grid -->
+    <div class="w3-row">
+        <!-- Left Column -->
+        <div class="w3-col m3">
+            <!-- Profile -->
+            <div class="w3-card-2 w3-round w3-white">
+                <div class="w3-container">
+                    <h4 class="w3-center">@ViewBag.currentUser.SurName (@ViewBag.currentUser.UserName)</h4>
+                    <p class="w3-center"><img src="@Url.Content("~/Images/")/@ViewBag.currentUser.Photo" class="" style="max-height:206px;width:206px" alt="Avatar"></p>
+                    <hr>
+                    <p><i class="fa fa-envelope-o fa-fw w3-margin-right w3-text-theme"></i> @ViewBag.currentUser.Email</p>
+                    <p><i class="fa fa-male fa-fw w3-text-theme" style="padding-right:0px; margin-right:0px;"></i><i class="fa fa-female fa-fw w3-margin-right w3-text-theme" style="padding-left:0px; margin-left:-10px;"></i> @ViewBag.currentUser.Gender</p>
+                    <p><i class="fa fa-birthday-cake fa-fw w3-margin-right w3-text-theme"></i> @ViewBag.currentUser.BirthDay <!--//ToString("dd/MM/yyyy") (((System.DateTime.Now - Model.BirthDay).Days / 365) years)--></p>
+                    <p><a href="/Account/Edit/" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-edit"></i> &nbsp;Manage your account</a></p>
+                </div>
+            </div>
+            <br>
+
+
+            <!-- Alert Box -->
+            <div class="w3-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+                <span onclick="this.parentElement.style.display='none'" class="w3-hover-text-grey w3-closebtn">
+                    <i class="fa fa-remove"></i>
+                </span>
+                <p><strong>Hey!</strong></p>
+                <p>You have @ViewBag.photoCount posts. You can upload more images.</p>
+            </div>
+
+            <!-- End Left Column -->
+        </div>
+
+        <!-- Middle Column -->
+        <div class="w3-col m7">
+
+            <div class="w3-row-padding">
+                <div class="w3-col m12">
+                    <div class="w3-card-2 w3-round w3-white">
+
+                    </div>
+                </div>
+            </div>
+
+            <center><h1>My Photos</h1></center>
+            @foreach (var item in Model)
+            {
+                <div class="w3-container w3-card-2 w3-white w3-round w3-margin">
+                    <br>
+                    <img src="@Url.Content("~/Images/")/@item.SenderPhoto" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px; height:60px;">
+                    <span class="w3-right w3-opacity">@item.PublishedTime</span>
+                    <h4>@item.SenderName</h4><br>
+                    <hr class="w3-clear">
+                    <center>
+                        <h2>@Html.DisplayFor(modelItem => item.Title)</h2>
+                        <img style='width:100%; max-width:550px;' src="@Url.Content("~/PostedImages/")@item.Image" />
+                        </center>
+                        <p class="w3-margin-bottom">@Html.DisplayFor(modelItem => item.Content)</p>
+                    <a href="javascript:void(0)" class="like w3-btn w3-theme-d1 w3-margin-bottom" data-id="@item.Id"><i class="fa fa-thumbs-up"></i> @item.LikesCount Likes</a>
+                    <a href="/Post/Index/@item.Id/" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</a>
+</div>
+
+
+            }
+            <script type="text/javascript">
+            $(document).ready(function () {
+                //LIKE
+                $(document).on("click", "a.like", function () {
+                    var id = $(this).data("id");
+                    var link = "/Home/Like/" + id;
+                    var a = $(this);
+                    $.ajax({
+                        type: "GET",
+                        url: link,
+                        success: function (result) {
+                            a.html('<i class="fa fa-thumbs-up"></i> ' + result);
+                        }
+                    });
+                });
+
+            });
+            </script>
+            <!-- End Middle Column -->
+        </div>
+
+        <!-- Right Column -->
+        <div class="w3-col m2">
+            <div class="w3-card-2 w3-round w3-white w3-center">
+                <div class="w3-container">
+                    <p>Upload new photo:</p>
+                    <a href="/Home/Create/" class="w3-btn-floating-large" style="text-decoration: none;">+</a>
+                    <p><strong>It's easy!</strong></p>
+                    <p>You have @ViewBag.photoCount photos now.</p>
+                    
+                </div>
+            </div>
+            <br>
+
+     
+
+            <div class="w3-card-2 w3-round w3-white w3-padding-16 w3-center">
+                <p>AD place</p>
+            </div>
+            <br>
+
+     
+
+            <!-- End Right Column -->
+        </div>
+
+        <!-- End Grid -->
+    </div>
+
+    <!-- End Page Container -->
+</div>

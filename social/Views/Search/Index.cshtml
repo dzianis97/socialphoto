@@ -1,0 +1,69 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<social.Models.Post>
+
+@{
+    ViewBag.Title = "Search results";
+}
+<br><br><br>
+
+<center>
+    <form action="/Search/Index" enctype="multipart/form-data" class="w3-container w3-card-4" style="width:100%; max-width:800px" method="get">
+   <br>
+               <input class="w3-input w3-border w3-round" style="width:40%; display:inline;" id="searchreq" name="searchreq" type="text" value="@ViewBag.searchreq" />
+                <input type="submit" class="w3-btn w3-theme-d1 " value="Искать" />
+
+   
+        <br><br>
+    </form>
+
+
+    <h1>Search results</h1>
+@foreach (var item in Model)
+{
+
+    <div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" align="left">
+        <br>
+        <img src="@Url.Content("~/Images/")/@item.SenderPhoto" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px; height:60px;">
+        <span class="w3-right w3-opacity">@item.PublishedTime</span>
+        <h4>@Html.DisplayFor(modelItem => item.SenderName)</h4><br>
+        <hr class="w3-clear">
+
+        <center>
+            <h2>@Html.DisplayFor(modelItem => item.Title)</h2>
+            <img style='width:100%; max-width:550px;' src="@Url.Content("~/PostedImages/")@item.Image" />
+        </center>
+        <p class="w3-margin-bottom">@Html.DisplayFor(modelItem => item.Content)</p>
+
+        <a href="javascript:void(0)" class="like w3-btn w3-theme-d1 w3-margin-bottom" data-id="@item.Id"><i class="fa fa-thumbs-up"></i> @item.LikesCount Likes</a>
+
+
+
+
+
+        <!--<button type="button" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</button>-->
+    </div>
+
+
+}
+    <script type="text/javascript">
+            $(document).ready(function () {
+                //LIKE
+                $(document).on("click", "a.like", function () {
+                    var id = $(this).data("id");
+                    var link = "/Home/Like/" + id;
+                    var a = $(this);
+                    $.ajax({
+                        type: "GET",
+                        url: link,
+                        success: function (result) {
+                            a.html('<i class="fa fa-thumbs-up"></i> ' + result);
+                        }
+                    });
+                });
+
+            });
+    </script>
+</center>
+

@@ -1,0 +1,117 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IEnumerable<social.Models.Post>
+
+@{
+    ViewBag.Title = "Index";
+}
+<br><br><br>
+
+<center>
+    <h1>Last photos</h1>
+    <div id="new_message_place"></div>
+    
+@foreach (var item in Model)
+            {
+    
+    <div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" align="left">
+        <br>
+        <img src="@Url.Content("~/Images/")/@item.SenderPhoto" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px; height:60px;">
+        <span class="w3-right w3-opacity">@item.PublishedTime</span>
+        <h4>@Html.DisplayFor(modelItem => item.SenderName)</h4><br>
+        <hr class="w3-clear">
+        
+        <center>
+            <h2>@Html.DisplayFor(modelItem => item.Title)</h2>
+        <img style='width:100%; max-width:550px;' src="@Url.Content("~/PostedImages/")@item.Image"/>
+            </center>
+        <p class="w3-margin-bottom">@Html.DisplayFor(modelItem => item.Content)</p>
+        
+        <a href="javascript:void(0)" class="like w3-btn w3-theme-d1 w3-margin-bottom" data-id="@item.Id"><i class="fa fa-thumbs-up"></i> @item.LikesCount Likes</a>
+ 
+
+
+
+
+<a href="/Post/Index/@item.Id/" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-comment"></i>  Comment</a>
+    </div>
+
+
+}
+
+
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+                //LIKE
+                $(document).on("click", "a.like", function () {
+                    var id = $(this).data("id");
+                    var link = "/Home/Like/" + id;
+                    var a = $(this);
+                    $.ajax({
+                        type: "GET",
+                        url: link,
+                        success: function (result) {
+                            a.html('<i class="fa fa-thumbs-up"></i> ' + result);
+                        }
+                    });
+                });
+
+            });
+    </script>
+
+
+    @section scripts {
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.1.min.js")
+    @Scripts.Render("~/signalr/hubs")
+    <script>
+        $(function () {
+            var chat = $.connection.photoHub;
+            chat.client.addMessage = function (message) {
+                setTimeout(function(){
+                $('#new_message_place').replaceWith('<div id="new_message_place"></div>' +
+                    '<div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" align="left"><br>'+
+                    '<img src="@Url.Content("~/Images/")' +
+                    htmlEncode(message.SenderPhoto)+
+                    '" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px; height:60px;">' +
+                    '<span class="w3-right w3-opacity">' +
+                     htmlEncode(message.time) +
+                     '</span>'+
+                     '<h4>'+htmlEncode(message.SenderName)+
+                    ' </h4><br><hr class="w3-clear"><center><h2>' +
+                     htmlEncode(message.Title) +
+                     '</h2><img style="width:100%; max-width:550px;" src="@Url.Content("~/PostedImages/")' +
+                    htmlEncode(message.Image) +
+                    '" />' +
+                     '</center><p class="w3-margin-bottom">' +
+                    htmlEncode(message.Content)+
+                    '</p> <a href="javascript:void(0)" class="like w3-btn w3-theme-d1 w3-margin-bottom" data-id="'+
+                    htmlEncode(message.PostId)+'"><i class="fa fa-thumbs-up"></i> '+
+                    htmlEncode(message.LikesCount)+' Likes</a></div>'
+                 );
+                }, 5000);
+            };
+            $.connection.hub.start().done(function () {
+                $('#messageSubmit').click(function () {
+                    var date = new Date();
+                    var time = date.getHours() + ":" + date.getMinutes();
+                    var msg = {
+                        'SenderId': $('#sender').val(),
+                        'content': $('#content').val(),
+                        'time': time,
+                    };
+                    chat.server.send(msg);
+                });
+            });
+        });
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+    </script>
+    }
+</center>
+ 

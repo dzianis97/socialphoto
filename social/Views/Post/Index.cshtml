@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using Microsoft.AspNet.Identity
+@model IEnumerable<social.Models.Comment>
+@{
+    ViewBag.Title = "Index";
+}
+<br><br><br>
+
+<center>
+
+    <div id="new_message_place"></div>
+
+
+
+    <div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" align="left">
+        <br>
+        <img src="@Url.Content("~/Images/")/@ViewBag.CurPost.SenderPhoto" alt="Avatar" class="w3-left w3-circle w3-margin-right" style="width:60px; height:60px;">
+        <span class="w3-right w3-opacity">@ViewBag.CurPost.PublishedTime</span>
+        <h4>@ViewBag.CurPost.SenderName</h4><br>
+        <hr class="w3-clear">
+
+        <center>
+            <h2>@ViewBag.CurPost.Title</h2>
+            <img style='width:100%; max-width:550px;' src="@Url.Content("~/PostedImages/")@ViewBag.CurPost.Image" />
+        </center>
+        <p class="w3-margin-bottom">@ViewBag.CurPost.Content)</p>
+
+        <a href="javascript:void(0)" class="like w3-btn w3-theme-d1 w3-margin-bottom" data-id="@ViewBag.CurPost.Id"><i class="fa fa-thumbs-up"></i> @ViewBag.CurPost.LikesCount Likes</a>
+
+
+
+
+        
+        @if ((ViewBag.CurPost.SenderId == User.Identity.GetUserId()) || (ViewBag.currentUser.isAdmin))
+            {
+         <a href="/Post/Edit/@ViewBag.CurPost.Id/" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-edit"></i>  Edit post</a>
+        <a href="/Post/Delete/@ViewBag.CurPost.Id/" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-times"></i>  Delete post</a>
+        }
+        <br>
+
+    </div>
+    
+    <div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" align="center">
+        <br>
+        <h2>Write Comment</h2>
+        <form action="/Post/Index" method="post">
+            
+
+
+                <textarea style="width:100%;" name="Content" value=""></textarea>
+
+
+                <input type="hidden" name="PhotoId" value="@ViewBag.CurPost.Id" />
+                <div>
+                    <input type="submit" value="Send" class="submit w3-btn w3-theme-d1 w3-margin-bottom" />
+                </div>
+                <br>
+
+        </form>
+
+        </div>
+@foreach (var item in Model)
+{
+    <div class="w3-container w3-card-2 w3-white w3-round w3-margin" style="width:100%; max-width:800px" align="left">
+        <br>
+        <table style="width:100%;" border="0">
+            <tbody>
+                <tr>
+                    <td width="150" align="center" valign="middle">
+                        <img src="@Url.Content("~/Images/")/@item.UserCommented.Photo" alt="Avatar" class="w3-circle" style="width:60px; height:60px;"><br>
+
+                        <h4>@Html.DisplayFor(modelItem => item.UserCommented.UserName)</h4>
+                        <span class="w3-opacity">@item.PublishedTime</span>
+                    </td>
+                    <td align="center" valign="middle"><h4>@Html.DisplayFor(modelItem => item.Content)</h4>
+                    @if ((item.UserId == User.Identity.GetUserId() )||(ViewBag.currentUser.isAdmin))
+                    {
+                    <a href="/Post/DeleteComment/@item.Id/" class="w3-btn w3-theme-d2 w3-margin-bottom"><i class="fa fa-times"></i>  Delete comment</a>
+                    }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+    </div>
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //LIKE
+        $(document).on("click", "a.like", function () {
+            var id = $(this).data("id");
+            var link = "/Home/Like/" + id;
+            var a = $(this);
+            $.ajax({
+                type: "GET",
+                url: link,
+                success: function (result) {
+                    a.html('<i class="fa fa-thumbs-up"></i> ' + result);
+                }
+            });
+        });
+
+    });
+</script>
+
+
+@section scripts {
+    @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+    @Scripts.Render("~/Scripts/jquery.signalR-2.2.1.min.js")
+    @Scripts.Render("~/signalr/hubs")
+
+}
+    </center>

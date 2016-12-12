@@ -1,0 +1,45 @@
+﻿@model social.Models.LoginViewModel
+
+@{
+    Layout = "~/Views/_AuthLayout.cshtml";
+    ViewBag.Title = "Login";
+}
+
+
+<div style="max-width:600px;" align="left">
+<div class="w3-container w3-teal">
+    <h2>Login Form</h2>
+</div>
+
+        <section id="loginForm">
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { role = "form", Class= "w3-container w3-card-4 w3-padding-12" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div>
+                    @Html.ValidationSummary()
+                    <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+                    <div class="form-group">
+                        <label class="w3-text-grey">Username</label>
+
+                        @Html.TextBoxFor(x => x.UserName, new { @class = "w3-input w3-border", placeholder = "username" })
+                    </div>
+                    <div class="form-group">
+                        <label class="w3-text-grey">Password</label>
+                        @Html.TextBoxFor(x => x.Password, new { @class = "w3-input w3-border", placeholder = "password", type = "password" })
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button type="submit" class="w3-btn w3-padding w3-teal">
+                            log in
+                        </button>
+                    
+                        <a class="w3-btn w3-white w3-border w3-border-blue " href="@Url.Action("Register", "Account")">
+                            <span class="glyphicon glyphicon-question-sign"></span> I don't have account
+                        </a>
+                    </div>
+                </div>
+            }
+        </section>
+   
+    </div>
